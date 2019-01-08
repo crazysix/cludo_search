@@ -2,13 +2,10 @@
 
 namespace Drupal\cludo_search\Form;
 
-use Drupal\Core\Url;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\PrivateKey;
 
 /**
  * Class SettingsForm.
@@ -25,36 +22,13 @@ class SettingsForm extends ConfigFormBase {
   protected $configFactory;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The private key.
-   *
-   * @var \Drupal\Core\PrivateKey
-   */
-  protected $privateKey;
-
-  /**
    * Constructs a \Drupal\aggregator\SettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\PrivateKey $private_key
-   *   The private key.
-   * @param \Drupal\acquia_connector\Client $client
-   *   The Acquia client.
    */
   public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, PrivateKey $private_key) {
     parent::__construct($config_factory);
-
-    $this->moduleHandler = $module_handler;
-    $this->privateKey = $private_key;
   }
 
   /**
@@ -62,9 +36,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
-      $container->get('module_handler'),
-      $container->get('private_key')
+      $container->get('config.factory')
     );
   }
 }
