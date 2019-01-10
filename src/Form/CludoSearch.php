@@ -27,7 +27,7 @@ class CludoSearch extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
 
     // Build form.
-    $prompt = ($prompt == '') ? t('Enter the terms you wish to search for.') : $prompt;
+    $prompt = $this->t('Enter the terms you wish to search for.');
 
     // Basic search.
     $form['basic'] = array(

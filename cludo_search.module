@@ -63,7 +63,7 @@ function cludo_search_features_api() {
 /**
  * Implements hook_help().
  */
-function cludo_search_help($route_name, RouteMatchInterface $route_match) {
+function cludo_search_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.cludo_search':
       $output = '';

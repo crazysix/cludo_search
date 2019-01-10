@@ -38,7 +38,8 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     // Get configured search path.
-    $path = $this->configFactory('cludo_search.settings')->get('search_page');
+    $config = $this->configFactory->get('cludo_search.settings');
+    $path = $config->get('search_page');
     if (empty($path)) {
       $path = constant('CS_DEFAULT_SEARCH_PAGE');
     }

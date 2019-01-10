@@ -27,7 +27,7 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, PrivateKey $private_key) {
+  public function __construct(ConfigFactoryInterface $config_factory) {
     parent::__construct($config_factory);
   }
 
@@ -39,7 +39,6 @@ class SettingsForm extends ConfigFormBase {
       $container->get('config.factory')
     );
   }
-}
 
 /**
    * {@inheritdoc}
@@ -136,7 +135,7 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory('cludo_search.settings');
+    $config = $this->configFactory->getEditable('cludo_search.settings');
     $values = $form_state->getValues();
     $field_keys = _cludo_search_get_field_keys();
     foreach ($field_keys as $field) {
