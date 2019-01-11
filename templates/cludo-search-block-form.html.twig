@@ -1,6 +1,4 @@
-<?php
-
-/**
+{#
  * @file
  * Default theme implementation for the search block form.
  *
@@ -12,8 +10,8 @@
  * - variables['block_search_form_complete'] : the entire form collapsed and rendered.
  *
  * @see template_preprocess_cludo_search_block_form()
- */
-?>
+ #}
+
 <div class="cludo-search-form" role="search">
-  <?php print $block_search_form_complete; ?>
+  {{ block_search_form_complete }}
 </div>

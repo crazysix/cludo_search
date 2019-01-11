@@ -1,6 +1,4 @@
-<?php
-
-/**
+{#
  * @file
  * Default theme implementation for displaying cludo Search search results.
  *
@@ -9,13 +7,13 @@
  * the results listing.
  *
  * @see cludo-search-result.tpl.php
- */
-?>
-<?php print drupal_render($search_form); ?>
-<?php print drupal_render($form); ?>
-<?php print drupal_render($cludo_search_search_form); ?>
+ #}
+
+{{ search_form }}
+{{ form }}
+{{ cludo_search_search_form }}
 <div class="cludo-search-form">
-  <?php print $search_form_complete; ?>
+  {{ search_form_complete }}
 </div>
 <!-- Cludo search results starts -->
 <div id="cludo-search-results">

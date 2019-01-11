@@ -7,6 +7,9 @@
  * See README.txt and the help page at admin/help/cludo_search.
  */
 
+use Drupal\Core\Render\Element;
+use Drupal\Component\Utility\Xss;
+
 /**
  * Default module settings.
  */
@@ -155,7 +158,7 @@ function template_preprocess_cludo_search_block_form(&$vars) {
   $hidden = array();
 
   // Vars named after form keys so themers can print each element independently.
-  foreach (element_children($vars['form']) as $key) {
+  foreach (Element::children($vars['form']) as $key) {
 
     // Token = FALSE on search form means '#type' wont be there
     // put the option check here while we wait and see if the tooken-to-false
@@ -163,10 +166,10 @@ function template_preprocess_cludo_search_block_form(&$vars) {
     // wild.
     $type = array_key_exists('#type', $vars['form'][$key]) ? $vars['form'][$key]['#type'] : '';
     if ($type == 'hidden' || $type == 'token') {
-      $hidden[] = drupal_render($vars['form'][$key]);
+      $hidden[] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
     }
     else {
-      $vars['block_search_form'][$key] = drupal_render($vars['form'][$key]);
+      $vars['block_search_form'][$key] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
     }
   }
 
@@ -187,7 +190,7 @@ function template_preprocess_cludo_search_search_form(&$vars) {
   $hidden = array();
 
   // Vars named after form keys so themers can print each element independently.
-  foreach (element_children($vars['form']) as $key) {
+  foreach (Element::children($vars['form']) as $key) {
 
     // Token = FALSE on search form means '#type' wont be there
     // put the option check here while we wait and see if the tooken-to-false
@@ -195,10 +198,10 @@ function template_preprocess_cludo_search_search_form(&$vars) {
     // wild.
     $type = array_key_exists('#type', $vars['form'][$key]) ? $vars['form'][$key]['#type'] : '';
     if ($type == 'hidden' || $type == 'token') {
-      $hidden[] = drupal_render($vars['form'][$key]);
+      $hidden[] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
     }
     else {
-      $vars['search_form'][$key] = drupal_render($vars['form'][$key]);
+      $vars['search_form'][$key] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
     }
   }
 
@@ -221,20 +224,19 @@ function template_preprocess_cludo_search_result(&$vars) {
   if ($vars['mime']['type'] != '') {
     $file = new stdClass();
     $file->filemime = $vars['mime']['type'];
-    $vars['mime']['icon'] = theme('file_icon', array(
+    $vars['mime']['icon'] = [
       'file' => $file,
-      'icon_directory' => variable_get('file_icon_directory', drupal_get_path('module', 'file') . '/icons'),
       'alt' => $vars['mime']['type'],
-    ));
+    ];
   }
 
   // Sanitise snippet and title.
   // Allow boldface through for keywork highlighting.
-  $vars['snippet'] = filter_xss($vars['snippet'], array('b', 'strong'));
-  $vars['title'] = filter_xss($vars['title'], array('b', 'strong'));
+  $vars['snippet'] = Xss::filter($vars['snippet'], array('b', 'strong'));
+  $vars['title'] = Xss::filter($vars['title'], array('b', 'strong'));
 
   // Sanitize crawl date.
-  $vars['crawl_date'] = check_plain($vars['crawl_date']);
+  $vars['crawl_date'] = \Drupal\Component\Utility\Html::escape($vars['crawl_date']);
 
   // Add a cludo-search-levelx class if we're sub-levels.
   if ((int) $vars['level'] > 1) {
