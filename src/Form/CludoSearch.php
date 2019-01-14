@@ -75,10 +75,10 @@ class CludoSearch extends FormBase {
 
     // Define variables and add to JS.
     $settings = _cludo_search_get_settings();
-    $disable_autocomplete = $settings['disable_autocomplete'] ? 'true' : 'false';
-    $hide_results = $settings['hide_results_count'] ? 'true' : 'false';
-    $hide_did_you_mean = $settings['hide_did_you_mean'] ? 'true' : 'false';
-    $hide_search_filters = $settings['hide_search_filters'] ? 'true' : 'false';
+    $disable_autocomplete = $settings['disable_autocomplete'] ? true : false;
+    $hide_results = $settings['hide_results_count'] ? true : false;
+    $hide_did_you_mean = $settings['hide_did_you_mean'] ? true : false;
+    $hide_search_filters = $settings['hide_search_filters'] ? true : false;
     global $base_url;
     $search_url = $base_url . DIRECTORY_SEPARATOR . $settings['search_page'];
     $form['#attached']['drupalSettings']['cludo_search']['cludo_searchJS'] = [
