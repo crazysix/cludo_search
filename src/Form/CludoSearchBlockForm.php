@@ -74,7 +74,7 @@ class CludoSearchBlockForm extends FormBase {
 
     $form_state->setRedirect(
       'cludo_search.search',
-      NULL,
+      [],
       [
         'query' => $query,
         'fragment' => '?' . $cludo_fragment,
