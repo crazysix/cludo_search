@@ -2,10 +2,8 @@
 
 namespace Drupal\cludo_search\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CludoSearch.
@@ -31,32 +29,32 @@ class CludoSearch extends FormBase {
     $query = '';
 
     // Basic search.
-    $form['basic'] = array(
+    $form['basic'] = [
       '#type' => 'container',
-    );
-    $form['basic']['search_keys'] = array(
+    ];
+    $form['basic']['search_keys'] = [
       '#type' => 'textfield',
       '#default_value' => $query,
-      '#attributes' => array(
+      '#attributes' => [
         'title' => $prompt,
         'autocomplete' => 'off',
-      ),
+      ],
       '#title' => $prompt,
       '#title_display' => 'before',
-    );
+    ];
 
     // Only prompt if we haven't searched yet.
     if ($query == '') {
-      $form['basic']['prompt'] = array(
+      $form['basic']['prompt'] = [
         '#type' => 'item',
         '#markup' => '<p><b>' . $prompt . '</b></p>',
-      );
+      ];
     }
 
-    $form['basic']['submit'] = array(
+    $form['basic']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Search'),
-    );
+      '#value' => $this->t('Search'),
+    ];
 
     // Submit points to search page without any keys (pre-search state)
     // the redirect happens in _submit handler
@@ -75,10 +73,10 @@ class CludoSearch extends FormBase {
 
     // Define variables and add to JS.
     $settings = _cludo_search_get_settings();
-    $disable_autocomplete = $settings['disable_autocomplete'] ? true : false;
-    $hide_results = $settings['hide_results_count'] ? true : false;
-    $hide_did_you_mean = $settings['hide_did_you_mean'] ? true : false;
-    $hide_search_filters = $settings['hide_search_filters'] ? true : false;
+    $disable_autocomplete = $settings['disable_autocomplete'] ? TRUE : FALSE;
+    $hide_results = $settings['hide_results_count'] ? TRUE : FALSE;
+    $hide_did_you_mean = $settings['hide_did_you_mean'] ? TRUE : FALSE;
+    $hide_search_filters = $settings['hide_search_filters'] ? TRUE : FALSE;
     global $base_url;
     $search_url = $base_url . DIRECTORY_SEPARATOR . $settings['search_page'];
     $form['#attached']['drupalSettings']['cludo_search']['cludo_searchJS'] = [
@@ -103,8 +101,6 @@ class CludoSearch extends FormBase {
 
     // Dirty change to get rid of +.
     $search_query = str_replace('+', '%20', $search_query);
-
-    //$form_state['redirect'] = url($form_state['action'] . $search_query, array('absolute' => TRUE));
-    //$data = "submit info: " . $search_query . " \n redirect: " . $form_state['redirect'] . "\n";
   }
+
 }

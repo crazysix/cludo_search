@@ -40,7 +40,7 @@ class SettingsForm extends ConfigFormBase {
     );
   }
 
-/**
+  /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
@@ -62,71 +62,71 @@ class SettingsForm extends ConfigFormBase {
     $settings = _cludo_search_get_settings();
 
     // Connection information.
-    $form['connection_info'] = array(
+    $form['connection_info'] = [
       '#title' => $this->t('Connection Information'),
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-    );
+    ];
 
-    $form['connection_info']['customerId'] = array(
+    $form['connection_info']['customerId'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Customer ID'),
       '#description' => $this->t('Cludo Search customerId value.'),
       '#default_value' => $settings['customerId'],
       '#required' => TRUE,
-    );
+    ];
 
-    $form['connection_info']['engineId'] = array(
+    $form['connection_info']['engineId'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Engine ID'),
       '#description' => $this->t('Cludo Search engineId value.'),
       '#default_value' => $settings['engineId'],
       '#required' => TRUE,
-    );
+    ];
 
-    $form['connection_info']['search_page'] = array(
+    $form['connection_info']['search_page'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Search page path'),
       '#description' => $this->t('Cludo search page.'),
       '#default_value' => $settings['search_page'],
       '#required' => TRUE,
-    );
+    ];
 
-    $form['additional_customisations'] = array(
+    $form['additional_customisations'] = [
       '#title' => $this->t('Additional Customisations'),
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-    );
+    ];
 
-    $form['additional_customisations']['disable_autocomplete'] = array(
+    $form['additional_customisations']['disable_autocomplete'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Disable Autocomplete'),
       '#description' => $this->t('This will disable autocomplete on the search form'),
       '#default_value' => $settings['disable_autocomplete'],
-    );
+    ];
 
-    $form['additional_customisations']['hide_results_count'] = array(
+    $form['additional_customisations']['hide_results_count'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide Results Count'),
       '#description' => $this->t('This will hide the number of results from displaying.'),
       '#default_value' => $settings['hide_results_count'],
-    );
+    ];
 
-    $form['additional_customisations']['hide_did_you_mean'] = array(
+    $form['additional_customisations']['hide_did_you_mean'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide the "Did you mean..." suggestions'),
       '#description' => $this->t('This will stop the suggestions from showing'),
       '#default_value' => $settings['hide_did_you_mean'],
-    );
+    ];
 
-    $form['additional_customisations']['hide_search_filters'] = array(
+    $form['additional_customisations']['hide_search_filters'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide search filters (Overlay Implementation only)'),
       '#description' => $this->t('Hides the search filters.'),
       '#default_value' => $settings['hide_search_filters'],
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -144,11 +144,12 @@ class SettingsForm extends ConfigFormBase {
     $config->save();
 
     // Refresh settings getter.
-    $settings = _cludo_search_get_settings(TRUE);
+    _cludo_search_get_settings(TRUE);
 
     // Make the 'search_title' setting change take effect right away.
     \Drupal::service('router.builder')->rebuild();
 
     parent::submitForm($form, $form_state);
   }
+
 }

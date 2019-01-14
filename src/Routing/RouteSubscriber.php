@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Cludo search route subscriber.
- */
-
 namespace Drupal\cludo_search\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;
@@ -16,7 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
-/**
+  /**
    * The config factory interface.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -41,7 +36,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     $config = $this->configFactory->get('cludo_search.settings');
     $path = $config->get('search_page');
     if (empty($path)) {
-      $path = constant('CS_DEFAULT_SEARCH_PAGE');
+      $path = constant('CLUDO_SEARCH_DEFAULT_SEARCH_PAGE');
     }
 
     // Change path '/csearch' to path set in admin form.
@@ -49,4 +44,5 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setPath('/' . $path);
     }
   }
+
 }

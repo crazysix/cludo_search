@@ -7,19 +7,20 @@
  * See README.txt and the help page at admin/help/cludo_search.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\Html;
 
 /**
  * Default module settings.
  */
-define('CS_DEFAULT_CUSTOMERID', 'default_customerId');
-define('CS_DEFAULT_ENGINEID', 'default_engineId');
-define('CS_DEFAULT_SEARCH_PAGE', 'csearch');
-define('CS_DEFAULT_DISABLE_AUTOCOMPLETE', FALSE);
-define('CS_DEFAULT_HIDE_RESULTS_COUNT', FALSE);
-define('CS_DEFAULT_HIDE_DID_YOU_MEAN', FALSE);
-define('CS_DEFAULT_HIDE_SEARCH_FILTERS', FALSE);
+define('CLUDO_SEARCH_DEFAULT_CUSTOMERID', 'default_customerId');
+define('CLUDO_SEARCH_DEFAULT_ENGINEID', 'default_engineId');
+define('CLUDO_SEARCH_DEFAULT_SEARCH_PAGE', 'csearch');
+define('CLUDO_SEARCH_DEFAULT_DISABLE_AUTOCOMPLETE', FALSE);
+define('CLUDO_SEARCH_DEFAULT_HIDE_RESULTS_COUNT', FALSE);
+define('CLUDO_SEARCH_DEFAULT_HIDE_DID_YOU_MEAN', FALSE);
+define('CLUDO_SEARCH_DEFAULT_HIDE_SEARCH_FILTERS', FALSE);
 
 /**
  * Minimize redundant trips to the db when looking for module settings.
@@ -41,7 +42,7 @@ function _cludo_search_get_settings($refresh = FALSE) {
     // Settings fall back to default constants.
     foreach ($field_keys as $field) {
       $field_value = $config->get($field);
-      $settings[$field] = !empty($field_value) ? $field_value : constant('CS_DEFAULT_' . strtoupper($field));
+      $settings[$field] = !empty($field_value) ? $field_value : constant('CLUDO_SEARCH_DEFAULT_' . strtoupper($field));
     }
   }
 
@@ -52,21 +53,21 @@ function _cludo_search_get_settings($refresh = FALSE) {
  * Implements hook_features_api().
  */
 function cludo_search_features_api() {
-  return array(
-    'cludo_search_profile' => array(
+  return [
+    'cludo_search_profile' => [
       'name' => t('Config for Cludo search'),
       'file' => drupal_get_path('module', 'cludo_search') . '/cludo_search.features.inc',
       'default_file' => FEATURES_DEFAULTS_INCLUDED,
       'default_hook' => 'cludo_search_defaults',
       'feature_source' => TRUE,
-    ),
-  );
+    ],
+  ];
 }
 
 /**
  * Implements hook_help().
  */
-function cludo_search_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+function cludo_search_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.cludo_search':
       $output = '';
@@ -76,12 +77,12 @@ function cludo_search_help($route_name, \Drupal\Core\Routing\RouteMatchInterface
       $output .= '<h2>' . t('Blocks') . '</h2>';
       $output .= '<p>' . t('The module provides:') . '</p>' . PHP_EOL;
       $output .= '<ol><li>' . t('the block search form') . '</li>' . PHP_EOL;
-      $output .= '<p>' . t('Both can be enabled and configured on the <a href="@blocks-admin">Blocks administration page</a>. The block search form provides a search form that can be placed into any block.', array('@blocks-admin' => url('admin/structure/block'))) . '</p>';
+      $output .= '<p>' . t('Both can be enabled and configured on the <a href="@blocks-admin">Blocks administration page</a>. The block search form provides a search form that can be placed into any block.', ['@blocks-admin' => url('admin/structure/block')]) . '</p>';
 
       return $output;
 
     case 'admin/config/cludo_search/settings':
-      $output = '<p>' . t('The Cludo Search account settings . Visit <a href="@CS-help">Cludo Search help section</a> for more information on setting up the integration.', array('@CS-help' => url('admin/help/cludo_search'))) . '</p>';
+      $output = '<p>' . t('The Cludo Search account settings . Visit <a href="@CS-help">Cludo Search help section</a> for more information on setting up the integration.', ['@CS-help' => url('admin/help/cludo_search')]) . '</p>';
 
       return $output;
   }
@@ -94,7 +95,7 @@ function cludo_search_help($route_name, \Drupal\Core\Routing\RouteMatchInterface
  *   An array of all the variables.
  */
 function _cludo_search_get_field_keys() {
-  return array(
+  return [
     'customerId',
     'engineId',
     'search_page',
@@ -102,7 +103,7 @@ function _cludo_search_get_field_keys() {
     'hide_results_count',
     'hide_did_you_mean',
     'hide_search_filters',
-  );
+  ];
 }
 
 /**
@@ -110,108 +111,44 @@ function _cludo_search_get_field_keys() {
  */
 function cludo_search_theme() {
 
-  $registry = array();
+  $registry = [];
   $ca_template_dir = drupal_get_path('module', 'cludo_search') . '/templates';
 
   // Full search form on results pages.
-  $registry['cludo_search_search_form'] = array(
-    'arguments' => array('form' => NULL),
+  $registry['cludo_search_search_form'] = [
+    'arguments' => ['form' => NULL],
     'render element' => 'form',
     'template' => 'cludo-search-search-form',
     'path' => $ca_template_dir,
-  );
+  ];
 
   // Block search form.
-  $registry['cludo_search_block_form'] = array(
+  $registry['cludo_search_block_form'] = [
     'render element' => 'form',
     'template' => 'cludo-search-block-form',
     'path' => $ca_template_dir,
-  );
+  ];
 
   // Results page (top level template for the rest).
-  $registry['cludo_search_results'] = array(
-    'variables' => array(
+  $registry['cludo_search_results'] = [
+    'variables' => [
       'search_query_data' => NULL,
       'response_data' => NULL,
       'synonyms_label' => t('You might also try:'),
-    ),
+    ],
     'template' => 'cludo-search-results',
     'path' => $ca_template_dir,
-  );
+  ];
 
   // Single result within the results page.
-  $registry['cludo_search_result'] = array(
-    'variables' => array('result_data' => NULL),
+  $registry['cludo_search_result'] = [
+    'variables' => ['result_data' => NULL],
     'template' => 'cludo-search-result',
     'path' => $ca_template_dir,
-  );
+  ];
 
   return $registry;
 }
-
-/**
- * Preprocess block search form.
- */
-/*function template_preprocess_cludo_search_block_form(&$vars) {
-
-  $vars['block_search_form'] = array();
-  $hidden = array();
-
-  // Vars named after form keys so themers can print each element independently.
-  foreach (Element::children($vars['form']) as $key) {
-
-    // Token = FALSE on search form means '#type' wont be there
-    // put the option check here while we wait and see if the tooken-to-false
-    // solution for Varnish caching issue actually solves the problem in the
-    // wild.
-    $type = array_key_exists('#type', $vars['form'][$key]) ? $vars['form'][$key]['#type'] : '';
-    if ($type == 'hidden' || $type == 'token') {
-      $hidden[] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
-    }
-    else {
-      $vars['block_search_form'][$key] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
-    }
-  }
-
-  // No theming value on hidden elements, so collapse them.
-  $vars['block_search_form']['hidden'] = implode($hidden);
-
-  // Collect the whole shebang so the complete form can be rendered with one
-  // var.
-  $vars['block_search_form_complete'] = implode($vars['block_search_form']);
-}*/
-
-/**
- * Preprocess the full search form.
- */
-/*function template_preprocess_cludo_search_search_form(&$vars) {
-
-  $vars['search_form'] = array();
-  $hidden = array();
-
-  // Vars named after form keys so themers can print each element independently.
-  foreach (Element::children($vars['form']) as $key) {
-
-    // Token = FALSE on search form means '#type' wont be there
-    // put the option check here while we wait and see if the tooken-to-false
-    // solution for Varnish caching issue actually solves the problem in the
-    // wild.
-    $type = array_key_exists('#type', $vars['form'][$key]) ? $vars['form'][$key]['#type'] : '';
-    if ($type == 'hidden' || $type == 'token') {
-      $hidden[] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
-    }
-    else {
-      $vars['search_form'][$key] = \Drupal::service('renderer')->renderRoot($vars['form'][$key]);
-    }
-  }
-
-  // No theming value on hidden elements, so collapse them.
-  $vars['search_form']['hidden'] = implode($hidden);
-
-  // Collect the whole shebang so the complete form can be rendered with one
-  // var.
-  $vars['search_form_complete'] = implode($vars['search_form']);
-}*/
 
 /**
  * Preprocess a single search result.
@@ -232,12 +169,12 @@ function template_preprocess_cludo_search_result(&$vars) {
 
   // Sanitise snippet and title.
   // Allow boldface through for keywork highlighting.
-  $vars['snippet'] = Xss::filter($vars['snippet'], array('b', 'strong'));
-  $vars['title'] = Xss::filter($vars['title'], array('b', 'strong'));
+  $vars['snippet'] = Xss::filter($vars['snippet'], ['b', 'strong']);
+  $vars['title'] = Xss::filter($vars['title'], ['b', 'strong']);
 
   // Sanitize crawl date.
   if (!empty($vars['crawl_date'])) {
-    $vars['crawl_date'] = \Drupal\Component\Utility\Html::escape($vars['crawl_date']);
+    $vars['crawl_date'] = Html::escape($vars['crawl_date']);
   }
 
   // Add a cludo-search-levelx class if we're sub-levels.

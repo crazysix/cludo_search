@@ -2,10 +2,8 @@
 
 namespace Drupal\cludo_search\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\UrlHelper;
 
 /**
@@ -32,21 +30,21 @@ class CludoSearchBlockForm extends FormBase {
     $query = '';
 
     // Basic search.
-    $form['search_keys'] = array(
+    $form['search_keys'] = [
       '#type' => 'textfield',
       '#default_value' => $query,
-      '#attributes' => array(
+      '#attributes' => [
         'title' => $prompt,
         'autocomplete' => 'off',
-      ),
+      ],
       '#title' => $prompt,
       '#title_display' => 'before',
-    );
+    ];
 
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Search'),
-    );
+      '#value' => $this->t('Search'),
+    ];
 
     return $form;
   }
@@ -63,8 +61,6 @@ class CludoSearchBlockForm extends FormBase {
 
     // Set the redirect, decode to remove + and %20.
     $search_query = urldecode($form_state->getValue('search_keys'));
-
-    $settings = _cludo_search_get_settings();
 
     // Grab any query params and pass back into redirect.
     $query = \Drupal::request()->query->all();
@@ -84,4 +80,5 @@ class CludoSearchBlockForm extends FormBase {
     // Search execution happens in page callback.
     $form['#action'] = '';
   }
+
 }
