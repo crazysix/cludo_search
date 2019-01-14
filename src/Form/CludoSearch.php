@@ -18,7 +18,7 @@ class CludoSearch extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'field_group_add_form';
+    return 'cludo_search_search_form';
   }
 
   /**
@@ -28,6 +28,7 @@ class CludoSearch extends FormBase {
 
     // Build form.
     $prompt = $this->t('Enter the terms you wish to search for.');
+    $query = '';
 
     // Basic search.
     $form['basic'] = array(
