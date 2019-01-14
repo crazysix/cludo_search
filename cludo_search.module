@@ -152,7 +152,7 @@ function cludo_search_theme() {
 /**
  * Preprocess block search form.
  */
-function template_preprocess_cludo_search_block_form(&$vars) {
+/*function template_preprocess_cludo_search_block_form(&$vars) {
 
   $vars['block_search_form'] = array();
   $hidden = array();
@@ -179,7 +179,7 @@ function template_preprocess_cludo_search_block_form(&$vars) {
   // Collect the whole shebang so the complete form can be rendered with one
   // var.
   $vars['block_search_form_complete'] = implode($vars['block_search_form']);
-}
+}*/
 
 /**
  * Preprocess the full search form.
