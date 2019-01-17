@@ -79,6 +79,26 @@ class CludoSearch extends FormBase {
     $hide_search_filters = $settings['hide_search_filters'] ? TRUE : FALSE;
     global $base_url;
     $search_url = $base_url . DIRECTORY_SEPARATOR . $settings['search_page'];
+    $global_filter = [];
+    if (!empty($settings['global_filter_category'])) {
+      $global_filter = preg_split('/[\n\r]+/', $settings['global_filter_category']);
+      foreach ($global_filter as $key => $facet) {
+        $global_filter[$key] = trim($facet);
+        if (empty($global_filter[$key])) {
+          unset($global_filter[$key]);
+        }
+      }
+    }
+    $whitelist = [];
+    if (!empty($settings['whitelist_categories'])) {
+      $whitelist = preg_split('/[\n\r]+/', $settings['whitelist_categories']);
+      foreach ($whitelist as $key => $facet) {
+        $whitelist[$key] = trim($facet);
+        if (empty($whitelist[$key])) {
+          unset($whitelist[$key]);
+        }
+      }
+    }
     $form['#attached']['drupalSettings']['cludo_search']['cludo_searchJS'] = [
       'customerId' => $settings['customerId'],
       'engineId' => $settings['engineId'],
@@ -87,6 +107,9 @@ class CludoSearch extends FormBase {
       'hideResultsCount' => $hide_results,
       'hideSearchDidYouMean' => $hide_did_you_mean,
       'hideSearchFilters' => $hide_search_filters,
+      'filters' => empty($global_filter) ? NULL : (object) ["Category" => $global_filter],
+      'whitelistFilters' => $whitelist,
+      'initFacets' => NULL, //empty($global_filter) ? NULL : (object) ["Category" => $global_filter],
     ];
 
     return $form;

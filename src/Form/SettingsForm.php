@@ -128,6 +128,28 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $settings['hide_search_filters'],
     ];
 
+    $form['additional_customisations']['global_filter_category'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Global Filter Category'),
+      '#description' => $this->t('All results on this site will be filtered by this category. This is useful if the engine is used on multiple sites and subdomains. Leave blank to include all results. The end user cannot remove this filter.'),
+      '#default_value' => $settings['global_filter_category'],
+    ];
+
+    $form['additional_customisations']['whitelist_categories'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Whitelist Filters'),
+      '#description' => $this->t('If populated, only whitelisted filters will appear after search results. Leave blank to include all filters. This will not override the ability to hide filters. One filter (or category) per line.'),
+      '#default_value' => $settings['whitelist_categories'],
+    ];
+
+    $form['cludo_tabs'] = [
+      '#title' => $this->t('Tab Settings'),
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#description' => $this->t('Leaving the tab fields blank will produce the default behavior, meaning search results will appear without additional filtering. Adding tab information, which is driven by categories, will cause search results to default to the first cateogry. Tabs are provided via block to switch between the tabbed results. The first category can be "All" to get all results.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 

@@ -21,6 +21,8 @@ define('CLUDO_SEARCH_DEFAULT_DISABLE_AUTOCOMPLETE', FALSE);
 define('CLUDO_SEARCH_DEFAULT_HIDE_RESULTS_COUNT', FALSE);
 define('CLUDO_SEARCH_DEFAULT_HIDE_DID_YOU_MEAN', FALSE);
 define('CLUDO_SEARCH_DEFAULT_HIDE_SEARCH_FILTERS', FALSE);
+define('CLUDO_SEARCH_DEFAULT_GLOBAL_FILTER_CATEGORY', '');
+define('CLUDO_SEARCH_DEFAULT_WHITELIST_CATEGORIES', '');
 
 /**
  * Minimize redundant trips to the db when looking for module settings.
@@ -103,6 +105,8 @@ function _cludo_search_get_field_keys() {
     'hide_results_count',
     'hide_did_you_mean',
     'hide_search_filters',
+    'global_filter_category',
+    'whitelist_categories',
   ];
 }
 
