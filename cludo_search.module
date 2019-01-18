@@ -23,6 +23,7 @@ define('CLUDO_SEARCH_DEFAULT_HIDE_DID_YOU_MEAN', FALSE);
 define('CLUDO_SEARCH_DEFAULT_HIDE_SEARCH_FILTERS', FALSE);
 define('CLUDO_SEARCH_DEFAULT_GLOBAL_FILTER_CATEGORY', '');
 define('CLUDO_SEARCH_DEFAULT_WHITELIST_CATEGORIES', '');
+define('CLUDO_SEARCH_DEFAULT_TAB_INFO', []);
 
 /**
  * Minimize redundant trips to the db when looking for module settings.
@@ -107,6 +108,7 @@ function _cludo_search_get_field_keys() {
     'hide_search_filters',
     'global_filter_category',
     'whitelist_categories',
+    'tab_info',
   ];
 }
 

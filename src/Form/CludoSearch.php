@@ -24,6 +24,9 @@ class CludoSearch extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    // Get settings.
+    $settings = _cludo_search_get_settings();
+
     // Build form.
     $prompt = $this->t('Enter the terms you wish to search for.');
     $query = '';
@@ -56,11 +59,19 @@ class CludoSearch extends FormBase {
       '#value' => $this->t('Search'),
     ];
 
-    // Submit points to search page without any keys (pre-search state)
-    // the redirect happens in _submit handler
-    // $form_state['action'] = 'csearch/';
-    // This one impacts the form: $form['#action'] = '4';
-    // $form['#action'] = 'csearch/';.
+    // Set tab info for the template.
+    $tab_info = $settings['tab_info'];
+    // Clear incomplete tabs.
+    if (!empty($tab_info)) {
+      foreach ($tab_info as $key => $tab) {
+        if (empty($tab['name']) || empty($tab['category'])) {
+          unset($tab_info[$key]);
+        }
+      }
+    }
+    $form['#tab_info'] = $tab_info;
+
+    // This may not be needed.
     $form['#action'] = '';
 
     // Use core search CSS in addition to this module's css
@@ -72,7 +83,6 @@ class CludoSearch extends FormBase {
     $form['#attached']['library'][] = 'cludo_search/cludo-customer';
 
     // Define variables and add to JS.
-    $settings = _cludo_search_get_settings();
     $disable_autocomplete = $settings['disable_autocomplete'] ? TRUE : FALSE;
     $hide_results = $settings['hide_results_count'] ? TRUE : FALSE;
     $hide_did_you_mean = $settings['hide_did_you_mean'] ? TRUE : FALSE;
@@ -99,6 +109,8 @@ class CludoSearch extends FormBase {
         }
       }
     }
+    $first_tab = reset($tab_info);
+    $init_facet = empty($first_tab['category']) || $first_tab['category'] == 'All' ? NULL : $first_tab['category'];
     $form['#attached']['drupalSettings']['cludo_search']['cludo_searchJS'] = [
       'customerId' => $settings['customerId'],
       'engineId' => $settings['engineId'],
@@ -109,7 +121,7 @@ class CludoSearch extends FormBase {
       'hideSearchFilters' => $hide_search_filters,
       'filters' => empty($global_filter) ? NULL : (object) ["Category" => $global_filter],
       'whitelistFilters' => $whitelist,
-      'initFacets' => NULL, //empty($global_filter) ? NULL : (object) ["Category" => $global_filter],
+      'initFacets' => empty($init_facet) ? NULL : (object) ["Category" => $init_facet],
     ];
 
     return $form;

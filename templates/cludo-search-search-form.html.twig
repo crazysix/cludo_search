@@ -12,6 +12,18 @@
  * @see template_preprocess_cludo_search_search_form()
  #}
 
+ {% if form['#tab_info'] %}
+  <div class="cludo-search-tabs-wrapper">
+    <ul class="cludo-search-tabs">
+      {% for tab in form['#tab_info'] %}
+        <li class="csearch-tab csearch-tab-{{ loop.index }} {% if loop.index == 1 %}active{% endif %}">
+          <a href="#" data-facet="{{ tab.category }}" title="{{ tab.name }}" class="csearch-tab-link csearch-tab-link-{{ loop.index }} {% if loop.index == 1 %}active{% endif %}">{{ tab.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {{ cludo_search_search_form }}
 <div class="cludo-search-form">
   {{ form }}

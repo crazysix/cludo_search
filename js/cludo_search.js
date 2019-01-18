@@ -3,7 +3,7 @@ var CludoSearch;
 (function ($, Drupal, drupalSettings) {
 Drupal.behaviors.CludoSearchBehavior = {
   attach: function (context, settings) {
-    // can access setting from 'drupalSettings';
+    // Set up Cludo Search;
     var cludoSettings = {
         customerId: drupalSettings.cludo_search.cludo_searchJS.customerId,
         engineId: drupalSettings.cludo_search.cludo_searchJS.engineId,
@@ -16,8 +16,8 @@ Drupal.behaviors.CludoSearchBehavior = {
         searchInputs: ["cludo-search-block-form","cludo-search-search-form"],
         type: 'inline',
         filters: drupalSettings.cludo_search.cludo_searchJS.filters,
-        customCallbackAfterSearch: cludoSearchRestrictFilters,
-        initFacets: null//{"Category": [""]}
+        customCallbackAfterSearch: cludoSearchPostSearchActions,
+        initFacets: drupalSettings.cludo_search.cludo_searchJS.initFacets
       };
     CludoSearch = new Cludo(cludoSettings);
     CludoSearch.init();
@@ -25,12 +25,21 @@ Drupal.behaviors.CludoSearchBehavior = {
     // Add whitelist values to the cludo object so we can use them later.
     CludoSearch.whitelistCategories = drupalSettings.cludo_search.cludo_searchJS.whitelistFilters;
 
+    // On click for cludo tabs.
+    $('a.csearch-tab-link').click(function() {
+      var tabFacet = $(this).attr('data-facet');
+      if (tabFacet == 'All') {
+        tabFacet = null;
+      }
+      CludoSearch.facet('Category', tabFacet, null);
+    });
   }
 };
 })(jQuery, Drupal, drupalSettings);
 
-// Remove unwanted filters.
-function cludoSearchRestrictFilters() {
+// Post search actions.
+function cludoSearchPostSearchActions() {
+  // Remove unwanted filters.
   if (!CludoSearch.hideSearchFilters) {
     // White listed facets.
     var whitelistFacets = CludoSearch.whitelistCategories;
@@ -60,4 +69,21 @@ function cludoSearchRestrictFilters() {
       }
     }
   }
+
+  // Mark tab as needed.
+  var currentCat = 'All'
+  if (CludoSearch.facets.Category.length > 0) {
+    currentCat = CludoSearch.facets.Category[0];
+  }
+  jQuery('a.csearch-tab-link').each(function(index) {
+    var tabFacet = jQuery(this).attr('data-facet');
+    if (tabFacet == currentCat) {
+      jQuery(this).addClass('active');
+      jQuery(this).parent().addClass('active');
+    }
+    else {
+      jQuery(this).removeClass('active');
+      jQuery(this).parent().removeClass('active');
+    }
+  });
 }

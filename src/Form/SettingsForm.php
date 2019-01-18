@@ -147,8 +147,29 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#description' => $this->t('Leaving the tab fields blank will produce the default behavior, meaning search results will appear without additional filtering. Adding tab information, which is driven by categories, will cause search results to default to the first cateogry. Tabs are provided via block to switch between the tabbed results. The first category can be "All" to get all results.'),
+      '#description' => $this->t('Leaving the tab fields blank will produce the default behavior, meaning search results will appear without additional filtering options. Adding tab information, which is driven by categories, will cause search results to default to the first tab cateogry. Tabs are provided via block to switch between the tabbed results. The first category can be "All" to get all results. It is recommended to hide facets if using the tabs to prevent user confusion. The first tab will be the default for searches.'),
     ];
+
+    $tab_info = $settings['tab_info'];
+
+    for ($i = 1; $i <= 5; $i++) {
+      $form['cludo_tabs']['tab_' . $i] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Tab %num', ['%num' => $i]),
+      ];
+      $form['cludo_tabs']['tab_' . $i]['tab_' . $i . '_name'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Tab %num Name', ['%num' => $i]),
+        '#description' => $this->t('This text will appear on the tab for users.'),
+        '#default_value' => empty($tab_info['tab_' . $i]['name']) ? '' : $tab_info['tab_' . $i]['name'],
+      ];
+      $form['cludo_tabs']['tab_' . $i]['tab_' . $i . '_category'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Tab %num Category', ['%num' => $i]),
+        '#description' => $this->t('This category will filter the results in this tab.'),
+        '#default_value' => empty($tab_info['tab_' . $i]['category']) ? '' : $tab_info['tab_' . $i]['category'],
+      ];
+    }
 
     return parent::buildForm($form, $form_state);
   }
@@ -161,8 +182,18 @@ class SettingsForm extends ConfigFormBase {
     $values = $form_state->getValues();
     $field_keys = _cludo_search_get_field_keys();
     foreach ($field_keys as $field) {
-      $config->set($field, trim($values[$field]));
+      if ($field != 'tab_info') {
+        $config->set($field, trim($values[$field]));
+      }
     }
+    $tab_info = [];
+    for ($i = 1; $i <= 5; $i++) {
+      $tab_info['tab_' . $i] = [
+        'name' => empty($values['tab_' . $i . '_name']) ? '' : trim($values['tab_' . $i . '_name']),
+        'category' => empty($values['tab_' . $i . '_category']) ? '' : trim($values['tab_' . $i . '_category']),
+      ];
+    }
+    $config->set('tab_info', $tab_info);
     $config->save();
 
     // Refresh settings getter.
