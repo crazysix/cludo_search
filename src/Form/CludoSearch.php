@@ -121,7 +121,7 @@ class CludoSearch extends FormBase {
       'hideSearchFilters' => $hide_search_filters,
       'filters' => empty($global_filter) ? NULL : (object) ["Category" => $global_filter],
       'whitelistFilters' => $whitelist,
-      'initFacets' => empty($init_facet) ? NULL : (object) ["Category" => $init_facet],
+      'initFacets' => empty($init_facet) ? NULL : (object) ["Category" => [$init_facet]],
     ];
 
     return $form;
